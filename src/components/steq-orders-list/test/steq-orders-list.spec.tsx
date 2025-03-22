@@ -10,6 +10,7 @@ describe('steq-orders-list', () => {
     expect(page.root).toEqualHtml(`
       <steq-orders-list>
         <mock:shadow-root>
+          Empty
           <slot></slot>
         </mock:shadow-root>
       </steq-orders-list>
