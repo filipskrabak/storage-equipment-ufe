@@ -9,7 +9,7 @@ export class SteqOrdersList {
   render() {
     return (
       <Host>
-        Empty
+        Steq
         <slot></slot>
       </Host>
     );
