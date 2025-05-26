@@ -6,10 +6,19 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface SteqApp {
+        "basePath": string;
+    }
     interface SteqOrdersList {
     }
 }
 declare global {
+    interface HTMLSteqAppElement extends Components.SteqApp, HTMLStencilElement {
+    }
+    var HTMLSteqAppElement: {
+        prototype: HTMLSteqAppElement;
+        new (): HTMLSteqAppElement;
+    };
     interface HTMLSteqOrdersListElement extends Components.SteqOrdersList, HTMLStencilElement {
     }
     var HTMLSteqOrdersListElement: {
@@ -17,13 +26,18 @@ declare global {
         new (): HTMLSteqOrdersListElement;
     };
     interface HTMLElementTagNameMap {
+        "steq-app": HTMLSteqAppElement;
         "steq-orders-list": HTMLSteqOrdersListElement;
     }
 }
 declare namespace LocalJSX {
+    interface SteqApp {
+        "basePath"?: string;
+    }
     interface SteqOrdersList {
     }
     interface IntrinsicElements {
+        "steq-app": SteqApp;
         "steq-orders-list": SteqOrdersList;
     }
 }
@@ -31,6 +45,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "steq-app": LocalJSX.SteqApp & JSXBase.HTMLAttributes<HTMLSteqAppElement>;
             "steq-orders-list": LocalJSX.SteqOrdersList & JSXBase.HTMLAttributes<HTMLSteqOrdersListElement>;
         }
     }
