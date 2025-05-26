@@ -7,7 +7,6 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface SteqApp {
-        "basePath": string;
     }
     interface SteqOrdersList {
     }
@@ -32,7 +31,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface SteqApp {
-        "basePath"?: string;
     }
     interface SteqOrdersList {
     }

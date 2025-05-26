@@ -1,4 +1,4 @@
-import { Component, Host, Prop, State, h } from '@stencil/core';
+import { Component, Host, h } from '@stencil/core';
 
 declare global {
   interface Window { navigation: any; }
@@ -10,11 +10,11 @@ declare global {
   shadow: true,
 })
 export class SteqApp {
-  @State() private relativePath = "";
+  //@State() private relativePath = "";
 
-  @Prop() basePath: string="";
+  //@Prop() basePath: string="";
 
-  componentWillLoad() {
+  /*componentWillLoad() {
     const baseUri = new URL(this.basePath, document.baseURI || "/").pathname;
 
     const toRelative = (path: string) => {
@@ -32,13 +32,13 @@ export class SteqApp {
     });
 
     toRelative(location.pathname)
-  }
+  }*/
 
   render() {
-    let element = "list"
-    let entryId = "@new"
+    //let element = "orders"
+    //let entryId = "@new"
 
-    if ( this.relativePath.startsWith("entry/"))
+    /*if ( this.relativePath.startsWith("entry/"))
     {
       element = "editor";
       entryId = this.relativePath.split("/")[1]
@@ -47,10 +47,11 @@ export class SteqApp {
     const navigate = (path:string) => {
       const absolute = new URL(path, new URL(this.basePath, document.baseURI)).pathname;
       window.navigation.navigate(absolute)
-    }
+    }*/
 
     return (
       <Host>
+        <steq-orders-list></steq-orders-list>
       </Host>
     );
   }
