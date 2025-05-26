@@ -32,22 +32,31 @@
     "loader/"
   ],
   "scripts": {
+    "convert-openapi": "js-yaml  ./api/storage-equipment.openapi.yaml > .openapi.json",
+    "mock-api": "open-api-mocker --schema .openapi.json --port 5000",
+    "start:app": "stencil build --dev --watch --serve",
+    "start:mock": "run-s convert-openapi mock-api",
+    "start": "run-p -r start:mock start:app",
     "build": "stencil build",
-    "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
-    "generate": "stencil generate"
+    "generate": "stencil generate",
+    "openapi": "openapi-generator-cli generate"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.20.2",
     "@stencil/core": "^4.27.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.5",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
+    "js-yaml": "^4.1.0",
+    "npm-run-all": "^4.1.5",
+    "open-api-mocker": "^2.0.0",
     "puppeteer": "^24.3.0"
   },
   "license": "MIT",
   "dependencies": {
-    "@material/web": "^2.2.0"
+    "@material/web": "^2.3.0"
   }
 }

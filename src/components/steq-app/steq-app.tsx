@@ -1,8 +1,4 @@
-import { Component, Host, h } from '@stencil/core';
-
-declare global {
-  interface Window { navigation: any; }
-}
+import { Component, Host, h, State, Prop, Listen } from '@stencil/core';
 
 @Component({
   tag: 'steq-app',
@@ -10,48 +6,109 @@ declare global {
   shadow: true,
 })
 export class SteqApp {
-  //@State() private relativePath = "";
+  @Prop() basePath: string = "";
+  @State() currentView: string = "list"; // list, detail, edit
+  @State() equipmentId: string = null;
 
-  //@Prop() basePath: string="";
-
-  /*componentWillLoad() {
-    const baseUri = new URL(this.basePath, document.baseURI || "/").pathname;
-
-    const toRelative = (path: string) => {
-      if (path.startsWith( baseUri)) {
-        this.relativePath = path.slice(baseUri.length)
-      } else {
-        this.relativePath = ""
-      }
+  componentWillLoad() {
+    // Listen for navigation events
+    if (window.navigation) {
+      window.navigation.addEventListener('navigate', this.handleNavigate);
     }
 
-    window.navigation?.addEventListener("navigate", (ev: Event) => {
-      if ((ev as any).canIntercept) { (ev as any).intercept(); }
-      let path = new URL((ev as any).destination.url).pathname;
-      toRelative(path);
-    });
+    // Parse initial URL
+    this.parseCurrentUrl();
+  }
 
-    toRelative(location.pathname)
-  }*/
+  disconnectedCallback() {
+    if (window.navigation) {
+      window.navigation.removeEventListener('navigate', this.handleNavigate);
+    }
+  }
+
+  handleNavigate = (event: any) => {
+    this.parseCurrentUrl();
+  }
+
+  parseCurrentUrl() {
+    const path = window.location.pathname;
+    const params = new URLSearchParams(window.location.search);
+
+    if (path.includes('/equipment/') || params.has('equipmentId')) {
+      this.currentView = 'detail';
+      this.equipmentId = path.split('/equipment/')[1] || params.get('equipmentId');
+    } else {
+      this.currentView = 'list';
+      this.equipmentId = null;
+    }
+  }
+
+  @Listen('view-equipment')
+  handleViewEquipment(event: CustomEvent) {
+    this.equipmentId = event.detail.id;
+    this.currentView = "detail";
+
+    // Update URL
+    const newUrl = `${this.basePath}equipment/${event.detail.id}`;
+    if (window.navigation && window.navigation.navigate) {
+      window.navigation.navigate(newUrl);
+    } else {
+      window.history.pushState({}, '', newUrl);
+    }
+  }
+
+  @Listen('edit-equipment')
+  handleEditEquipment(event: CustomEvent) {
+    this.equipmentId = event.detail.id;
+    this.currentView = "detail";
+
+    // Update URL
+    const newUrl = `${this.basePath}equipment/${event.detail.id}`;
+    if (window.navigation && window.navigation.navigate) {
+      window.navigation.navigate(newUrl);
+    } else {
+      window.history.pushState({}, '', newUrl);
+    }
+  }
+
+  @Listen('back')
+  handleBack() {
+    this.currentView = "list";
+    this.equipmentId = null;
+
+    // Update URL
+    const newUrl = this.basePath || '/';
+    if (window.navigation && window.navigation.navigate) {
+      window.navigation.navigate(newUrl);
+    } else {
+      window.history.pushState({}, '', newUrl);
+    }
+  }
 
   render() {
-    //let element = "orders"
-    //let entryId = "@new"
-
-    /*if ( this.relativePath.startsWith("entry/"))
-    {
-      element = "editor";
-      entryId = this.relativePath.split("/")[1]
-    }
-
-    const navigate = (path:string) => {
-      const absolute = new URL(path, new URL(this.basePath, document.baseURI)).pathname;
-      window.navigation.navigate(absolute)
-    }*/
-
     return (
       <Host>
-        <steq-orders-list></steq-orders-list>
+        <div class="app-container">
+          <header>
+            <h1>Hospital Equipment Management</h1>
+          </header>
+
+          <main>
+            {this.currentView === "list" && (
+              <steq-equipment-list></steq-equipment-list>
+            )}
+
+            {this.currentView === "detail" && this.equipmentId && (
+              <steq-equipment-detail
+                equipmentId={this.equipmentId}
+              ></steq-equipment-detail>
+            )}
+          </main>
+
+          <footer>
+            <p>© {new Date().getFullYear()} STEQ - Hospital Equipment Management System</p>
+          </footer>
+        </div>
       </Host>
     );
   }
