@@ -10,7 +10,7 @@ describe('steq-app', () => {
     expect(page.root).toEqualHtml(`
       <steq-app>
         <mock:shadow-root>
-          <slot></slot>
+          <steq-orders-list></steq-orders-list>
         </mock:shadow-root>
       </steq-app>
     `);
