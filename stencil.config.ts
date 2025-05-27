@@ -24,4 +24,8 @@ export const config: Config = {
   testing: {
     browserHeadless: "shell",
   },
+  devServer: {
+    reloadStrategy: 'pageReload',
+    port: 3333
+  }
 };

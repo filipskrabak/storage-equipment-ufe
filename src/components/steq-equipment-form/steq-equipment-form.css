@@ -9,14 +9,23 @@
 md-dialog {
   --md-dialog-container-color: var(--md-sys-color-surface);
   --md-dialog-headline-color: var(--md-sys-color-on-surface);
+  --md-dialog-container-max-width: none;
+  width: 800px;
+  max-width: 90vw;
+}
+
+md-dialog::part(dialog) {
+  max-width: none !important;
+  width: 800px;
+  max-width: 90vw;
 }
 
 .form-content {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  min-width: 600px;
-  max-width: 800px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .error-banner {
@@ -39,17 +48,25 @@ md-dialog {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
+  width: 100%;
 }
 
-@media (max-width: 768px) {
-  .form-content {
-    min-width: 90vw;
-    max-width: 90vw;
+@media (max-width: 900px) {
+  md-dialog {
+    width: 95vw;
+    max-width: 95vw;
   }
 
   .form-sections {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  md-dialog {
+    width: 100vw;
+    max-width: 100vw;
   }
 }
 
@@ -86,4 +103,12 @@ md-dialog [slot="headline"] {
 
 md-dialog [slot="headline"] md-icon {
   --md-icon-size: 24px;
+}
+
+/* Ensure dialog actions are properly aligned */
+md-dialog [slot="actions"] {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }

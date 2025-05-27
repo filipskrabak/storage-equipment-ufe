@@ -1,18 +1,6 @@
 import { Component, Host, h, State, Element } from '@stencil/core';
 import { EquipmentItem } from '../../api/storage-equipment/models';
 
-// Import Material Design components
-import '@material/web/button/filled-button';
-import '@material/web/button/text-button';
-import '@material/web/button/outlined-button';
-import '@material/web/list/list';
-import '@material/web/list/list-item';
-import '@material/web/icon/icon';
-import '@material/web/chips/chip-set';
-import '@material/web/chips/filter-chip';
-import '@material/web/progress/linear-progress';
-import '@material/web/dialog/dialog';
-
 @Component({
   tag: 'steq-equipment-list',
   styleUrl: 'steq-equipment-list.css',

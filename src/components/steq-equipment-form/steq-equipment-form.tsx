@@ -1,16 +1,6 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 import { EquipmentItem } from '../../api/storage-equipment/models';
 
-// Import Material Design components
-import '@material/web/button/filled-button';
-import '@material/web/button/text-button';
-import '@material/web/textfield/outlined-text-field';
-import '@material/web/select/outlined-select';
-import '@material/web/select/select-option';
-import '@material/web/dialog/dialog';
-import '@material/web/icon/icon';
-import '@material/web/progress/circular-progress';
-
 interface EquipmentFormData {
   name?: string;
   serialNumber?: string;

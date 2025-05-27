@@ -1,16 +1,6 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter, Element } from '@stencil/core';
 import { EquipmentItem } from '../../api/storage-equipment/models';
 
-// Import Material Design components
-import '@material/web/button/filled-button';
-import '@material/web/button/outlined-button';
-import '@material/web/card/elevated-card';
-import '@material/web/icon/icon';
-import '@material/web/chips/chip-set';
-import '@material/web/chips/assist-chip';
-import '@material/web/progress/circular-progress';
-import '@material/web/divider/divider';
-
 @Component({
   tag: 'steq-equipment-detail',
   styleUrl: 'steq-equipment-detail.css',
@@ -103,38 +93,44 @@ export class SteqEquipmentDetail {
   render() {
     if (this.loading) {
       return (
-        <div class="loading-container">
-          <md-circular-progress indeterminate></md-circular-progress>
-          <p>Loading equipment details...</p>
-        </div>
+        <Host>
+          <div class="loading-container">
+            <md-circular-progress indeterminate></md-circular-progress>
+            <p>Loading equipment details...</p>
+          </div>
+        </Host>
       );
     }
 
     if (this.error) {
       return (
-        <div class="error-container">
-          <md-icon>error</md-icon>
-          <h3>Failed to load equipment</h3>
-          <p>{this.error}</p>
-          <md-outlined-button onClick={this.handleBack}>
-            <md-icon slot="icon">arrow_back</md-icon>
-            Back to List
-          </md-outlined-button>
-        </div>
+        <Host>
+          <div class="error-container">
+            <md-icon>error</md-icon>
+            <h3>Failed to load equipment</h3>
+            <p>{this.error}</p>
+            <md-outlined-button onClick={this.handleBack}>
+              <md-icon slot="icon">arrow_back</md-icon>
+              Back to List
+            </md-outlined-button>
+          </div>
+        </Host>
       );
     }
 
     if (!this.equipment) {
       return (
-        <div class="not-found-container">
-          <md-icon>search_off</md-icon>
-          <h3>Equipment not found</h3>
-          <p>The requested equipment could not be found</p>
-          <md-outlined-button onClick={this.handleBack}>
-            <md-icon slot="icon">arrow_back</md-icon>
-            Back to List
-          </md-outlined-button>
-        </div>
+        <Host>
+          <div class="not-found-container">
+            <md-icon>search_off</md-icon>
+            <h3>Equipment not found</h3>
+            <p>The requested equipment could not be found</p>
+            <md-outlined-button onClick={this.handleBack}>
+              <md-icon slot="icon">arrow_back</md-icon>
+              Back to List
+            </md-outlined-button>
+          </div>
+        </Host>
       );
     }
 
@@ -178,7 +174,7 @@ export class SteqEquipmentDetail {
           </header>
 
           <div class="detail-content">
-            <md-elevated-card class="info-card">
+            <div class="info-card">
               <div class="card-content">
                 <div class="card-header">
                   <md-icon>info</md-icon>
@@ -229,9 +225,9 @@ export class SteqEquipmentDetail {
                   </div>
                 </div>
               </div>
-            </md-elevated-card>
+            </div>
 
-            <md-elevated-card class="info-card">
+            <div class="info-card">
               <div class="card-content">
                 <div class="card-header">
                   <md-icon>build</md-icon>
@@ -286,10 +282,10 @@ export class SteqEquipmentDetail {
                   </div>
                 </div>
               </div>
-            </md-elevated-card>
+            </div>
 
             {this.equipment.notes && (
-              <md-elevated-card class="info-card notes-card">
+              <div class="info-card notes-card">
                 <div class="card-content">
                   <div class="card-header">
                     <md-icon>notes</md-icon>
@@ -302,7 +298,7 @@ export class SteqEquipmentDetail {
                     {this.equipment.notes}
                   </div>
                 </div>
-              </md-elevated-card>
+              </div>
             )}
           </div>
         </div>

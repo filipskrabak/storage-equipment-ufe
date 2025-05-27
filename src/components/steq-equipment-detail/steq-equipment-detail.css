@@ -17,129 +17,133 @@
   background-color: var(--md-sys-color-surface);
 }
 
-.header {
+.detail-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.header h2 {
-  margin: 0;
-  color: #333;
-  flex-grow: 1;
-  text-align: center;
-}
-
-.back-btn {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
-
-.back-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.edit-btn {
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s;
-}
-
-.edit-btn:hover {
-  background-color: #e68a00;
-}
-
-.status-banner {
-  background-color: #f5f5f5;
-  padding: 0.8rem 1.2rem;
-  border-radius: 4px;
+  gap: 1rem;
   margin-bottom: 2rem;
-  font-weight: 500;
+  padding: 1.5rem;
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: 12px;
 }
 
-.status-banner[data-status="operational"] {
-  background-color: #e8f5e9;
-  border-left: 4px solid #4caf50;
+.header-content {
+  flex: 1;
 }
 
-.status-banner[data-status="operational"] span {
-  color: #2e7d32;
+.equipment-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.status-banner[data-status="in_repair"] {
-  background-color: #fff8e1;
-  border-left: 4px solid #ff9800;
+.equipment-title h1 {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
-.status-banner[data-status="in_repair"] span {
-  color: #ef6c00;
+.status-chip.status-success {
+  --md-assist-chip-container-color: #e8f5e9;
+  --md-assist-chip-label-text-color: #2e7d32;
 }
 
-.status-banner[data-status="faulty"] {
-  background-color: #ffebee;
-  border-left: 4px solid #f44336;
+.status-chip.status-warning {
+  --md-assist-chip-container-color: #fff8e1;
+  --md-assist-chip-label-text-color: #ef6c00;
 }
 
-.status-banner[data-status="faulty"] span {
-  color: #c62828;
+.status-chip.status-error {
+  --md-assist-chip-container-color: #ffebee;
+  --md-assist-chip-label-text-color: #c62828;
 }
 
-.status-banner[data-status="decommissioned"] {
-  background-color: #f5f5f5;
-  border-left: 4px solid #9e9e9e;
+.status-chip.status-disabled {
+  --md-assist-chip-container-color: #f5f5f5;
+  --md-assist-chip-label-text-color: #616161;
 }
 
-.status-banner[data-status="decommissioned"] span {
-  color: #616161;
-}
-
-.detail-sections {
+.detail-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-.detail-section {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.info-card {
+  background-color: var(--md-sys-color-surface-container);
+  border-radius: 12px;
+  box-shadow:
+    0px 1px 2px 0px rgba(0, 0, 0, 0.3),
+    0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.info-card:hover {
+  box-shadow:
+    0px 1px 3px 0px rgba(0, 0, 0, 0.3),
+    0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
   padding: 1.5rem;
 }
 
-.detail-section h3 {
-  margin-top: 0;
-  margin-bottom: 1.2rem;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 0.8rem;
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.detail-grid {
+.card-header md-icon {
+  color: var(--md-sys-color-primary);
+  --md-icon-size: 24px;
+}
+
+.card-header h2 {
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+md-divider {
+  margin-bottom: 1.5rem;
+}
+
+.info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
-.detail-item label {
-  font-size: 0.9rem;
-  color: #666;
-  display: block;
-  margin-bottom: 0.3rem;
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.detail-item div {
-  font-size: 1.1rem;
+.info-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--md-sys-color-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.info-label md-icon {
+  color: var(--md-sys-color-outline);
+  --md-icon-size: 18px;
+}
+
+.info-value {
+  color: var(--md-sys-color-on-surface);
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .notes-content {
