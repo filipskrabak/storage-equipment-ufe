@@ -20,11 +20,50 @@ header {
   color: white;
   padding: 1rem 2rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 header h1 {
   margin: 0;
   font-size: 1.5rem;
+}
+
+.section-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.section-nav button {
+  background: none;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.section-nav button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.section-nav button.active {
+  background-color: white;
+  color: var(--primary-color);
+  border-color: white;
+  font-weight: 600;
+}
+
+.section-nav button.active:hover {
+  background-color: #f8f9fa;
+  color: var(--primary-color);
 }
 
 main {

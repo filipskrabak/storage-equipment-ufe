@@ -20,6 +20,8 @@ export namespace Components {
     }
     interface SteqEquipmentList {
     }
+    interface SteqOrderList {
+    }
     interface SteqOrdersList {
     }
 }
@@ -80,6 +82,12 @@ declare global {
         prototype: HTMLSteqEquipmentListElement;
         new (): HTMLSteqEquipmentListElement;
     };
+    interface HTMLSteqOrderListElement extends Components.SteqOrderList, HTMLStencilElement {
+    }
+    var HTMLSteqOrderListElement: {
+        prototype: HTMLSteqOrderListElement;
+        new (): HTMLSteqOrderListElement;
+    };
     interface HTMLSteqOrdersListElement extends Components.SteqOrdersList, HTMLStencilElement {
     }
     var HTMLSteqOrdersListElement: {
@@ -91,6 +99,7 @@ declare global {
         "steq-equipment-detail": HTMLSteqEquipmentDetailElement;
         "steq-equipment-form": HTMLSteqEquipmentFormElement;
         "steq-equipment-list": HTMLSteqEquipmentListElement;
+        "steq-order-list": HTMLSteqOrderListElement;
         "steq-orders-list": HTMLSteqOrdersListElement;
     }
 }
@@ -111,6 +120,8 @@ declare namespace LocalJSX {
     }
     interface SteqEquipmentList {
     }
+    interface SteqOrderList {
+    }
     interface SteqOrdersList {
     }
     interface IntrinsicElements {
@@ -118,6 +129,7 @@ declare namespace LocalJSX {
         "steq-equipment-detail": SteqEquipmentDetail;
         "steq-equipment-form": SteqEquipmentForm;
         "steq-equipment-list": SteqEquipmentList;
+        "steq-order-list": SteqOrderList;
         "steq-orders-list": SteqOrdersList;
     }
 }
@@ -129,6 +141,7 @@ declare module "@stencil/core" {
             "steq-equipment-detail": LocalJSX.SteqEquipmentDetail & JSXBase.HTMLAttributes<HTMLSteqEquipmentDetailElement>;
             "steq-equipment-form": LocalJSX.SteqEquipmentForm & JSXBase.HTMLAttributes<HTMLSteqEquipmentFormElement>;
             "steq-equipment-list": LocalJSX.SteqEquipmentList & JSXBase.HTMLAttributes<HTMLSteqEquipmentListElement>;
+            "steq-order-list": LocalJSX.SteqOrderList & JSXBase.HTMLAttributes<HTMLSteqOrderListElement>;
             "steq-orders-list": LocalJSX.SteqOrdersList & JSXBase.HTMLAttributes<HTMLSteqOrdersListElement>;
         }
     }

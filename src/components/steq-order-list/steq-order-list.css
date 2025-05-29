@@ -1,0 +1,210 @@
+:host {
+  display: block;
+  --md-sys-color-surface: #fefbff;
+  --md-sys-color-on-surface: #1d1b20;
+  --md-sys-color-primary: #6750a4;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-secondary: #625b71;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-outline: #79747e;
+}
+
+.order-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: var(--md-sys-color-surface);
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--md-sys-color-surface);
+  border-radius: 12px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-text h1 {
+  margin: 0 0 0.5rem 0;
+  color: var(--md-sys-color-on-surface);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.header-text p {
+  margin: 0;
+  color: var(--md-sys-color-secondary);
+  font-size: 1rem;
+}
+
+.order-item {
+  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  background-color: var(--md-sys-color-surface);
+}
+
+.order-item:hover {
+  background-color: rgba(103, 80, 164, 0.08);
+}
+
+.order-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: rgba(103, 80, 164, 0.12);
+}
+
+.order-icon md-icon {
+  color: var(--md-sys-color-primary);
+  --md-icon-size: 24px;
+}
+
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.status-priority-chips {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-chip {
+  margin-bottom: 0.5rem;
+}
+
+.status-chip.status-operational {
+  --md-filter-chip-selected-container-color: #e8f5e9;
+  --md-filter-chip-selected-label-text-color: #2e7d32;
+}
+
+.status-chip.status-warning {
+  --md-filter-chip-selected-container-color: #fff8e1;
+  --md-filter-chip-selected-label-text-color: #ef6c00;
+}
+
+.status-chip.status-error {
+  --md-filter-chip-selected-container-color: #ffebee;
+  --md-filter-chip-selected-label-text-color: #c62828;
+}
+
+.status-chip.status-default {
+  --md-filter-chip-selected-container-color: #f5f5f5;
+  --md-filter-chip-selected-label-text-color: #616161;
+}
+
+.delete-button {
+  --md-text-button-label-text-color: var(--md-sys-color-error);
+  --md-text-button-with-icon-icon-color: var(--md-sys-color-error);
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #fef7f0;
+  border: 1px solid #f9dedc;
+  border-radius: 8px;
+  color: #442c2e;
+}
+
+.error-banner md-icon {
+  color: var(--md-sys-color-error);
+  --md-icon-size: 24px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-container p {
+  margin-top: 1rem;
+  color: var(--md-sys-color-secondary);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--md-sys-color-secondary);
+}
+
+.empty-state md-icon.empty-big-icon {
+  --md-icon-size: 64px;
+  color: var(--md-sys-color-outline);
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  margin: 1rem 0 0.5rem 0;
+  color: var(--md-sys-color-on-surface);
+  font-weight: 400;
+}
+
+.empty-state p {
+  margin: 0 0 2rem 0;
+  color: var(--md-sys-color-secondary);
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .order-actions {
+    align-items: stretch;
+  }
+
+  .status-priority-chips {
+    justify-content: center;
+  }
+}
+
+.order-summary {
+  font-size: 0.9rem;
+  color: var(--md-sys-color-secondary);
+}
+
+.order-id {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--md-sys-color-outline);
+}
+
+.disabled-button {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.disabled-button:hover {
+  background-color: transparent !important;
+  color: var(--md-sys-color-outline) !important;
+}

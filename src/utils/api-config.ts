@@ -3,6 +3,9 @@ export interface ApiConfig {
   endpoints: {
     equipment: string;
     equipmentById: (id: string) => string;
+
+    orders: string;
+    orderById: (id: string) => string;
   };
 }
 
@@ -11,6 +14,9 @@ let apiConfig: ApiConfig = {
   endpoints: {
     equipment: '/equipment',
     equipmentById: (id: string) => `/equipment/${id}`,
+    
+    orders: '/orders',
+    orderById: (id: string) => `/orders/${id}`,
   }
 };
 
