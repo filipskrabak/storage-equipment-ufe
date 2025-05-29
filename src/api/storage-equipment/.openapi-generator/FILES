@@ -1,8 +1,13 @@
 apis/EquipmentManagementApi.ts
+apis/EquipmentOrdersApi.ts
 apis/index.ts
 index.ts
 models/EquipmentCreate.ts
 models/EquipmentItem.ts
 models/EquipmentUpdate.ts
+models/Order.ts
+models/OrderCreate.ts
+models/OrderItem.ts
+models/OrderUpdate.ts
 models/index.ts
 runtime.ts

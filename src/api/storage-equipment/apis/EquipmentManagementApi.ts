@@ -286,7 +286,7 @@ export class EquipmentManagementApi extends runtime.BaseAPI implements Equipment
 
         const response = await this.request({
             path: `/equipment/{equipmentId}`.replace(`{${"equipmentId"}}`, encodeURIComponent(String(requestParameters.equipmentId))),
-            method: 'PUT',
+            method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
             body: EquipmentUpdateToJSON(requestParameters.equipmentUpdate),
