@@ -6,7 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { EquipmentItem } from "./api/storage-equipment/models";
+import { Order } from "./api/storage-equipment";
 export { EquipmentItem } from "./api/storage-equipment/models";
+export { Order } from "./api/storage-equipment";
 export namespace Components {
     interface SteqApp {
         "apiBase": string;
@@ -20,6 +22,12 @@ export namespace Components {
     }
     interface SteqEquipmentList {
     }
+    interface SteqOrderDetail {
+        "orderId": string;
+    }
+    interface SteqOrderForm {
+        "order"?: Order;
+    }
     interface SteqOrderList {
     }
     interface SteqOrdersList {
@@ -32,6 +40,14 @@ export interface SteqEquipmentDetailCustomEvent<T> extends CustomEvent<T> {
 export interface SteqEquipmentFormCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLSteqEquipmentFormElement;
+}
+export interface SteqOrderDetailCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSteqOrderDetailElement;
+}
+export interface SteqOrderFormCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSteqOrderFormElement;
 }
 declare global {
     interface HTMLSteqAppElement extends Components.SteqApp, HTMLStencilElement {
@@ -82,6 +98,42 @@ declare global {
         prototype: HTMLSteqEquipmentListElement;
         new (): HTMLSteqEquipmentListElement;
     };
+    interface HTMLSteqOrderDetailElementEventMap {
+        "back": any;
+    }
+    interface HTMLSteqOrderDetailElement extends Components.SteqOrderDetail, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSteqOrderDetailElementEventMap>(type: K, listener: (this: HTMLSteqOrderDetailElement, ev: SteqOrderDetailCustomEvent<HTMLSteqOrderDetailElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSteqOrderDetailElementEventMap>(type: K, listener: (this: HTMLSteqOrderDetailElement, ev: SteqOrderDetailCustomEvent<HTMLSteqOrderDetailElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSteqOrderDetailElement: {
+        prototype: HTMLSteqOrderDetailElement;
+        new (): HTMLSteqOrderDetailElement;
+    };
+    interface HTMLSteqOrderFormElementEventMap {
+        "cancel": any;
+        "orderCreated": Order;
+        "orderUpdated": Order;
+    }
+    interface HTMLSteqOrderFormElement extends Components.SteqOrderForm, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSteqOrderFormElementEventMap>(type: K, listener: (this: HTMLSteqOrderFormElement, ev: SteqOrderFormCustomEvent<HTMLSteqOrderFormElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSteqOrderFormElementEventMap>(type: K, listener: (this: HTMLSteqOrderFormElement, ev: SteqOrderFormCustomEvent<HTMLSteqOrderFormElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSteqOrderFormElement: {
+        prototype: HTMLSteqOrderFormElement;
+        new (): HTMLSteqOrderFormElement;
+    };
     interface HTMLSteqOrderListElement extends Components.SteqOrderList, HTMLStencilElement {
     }
     var HTMLSteqOrderListElement: {
@@ -99,6 +151,8 @@ declare global {
         "steq-equipment-detail": HTMLSteqEquipmentDetailElement;
         "steq-equipment-form": HTMLSteqEquipmentFormElement;
         "steq-equipment-list": HTMLSteqEquipmentListElement;
+        "steq-order-detail": HTMLSteqOrderDetailElement;
+        "steq-order-form": HTMLSteqOrderFormElement;
         "steq-order-list": HTMLSteqOrderListElement;
         "steq-orders-list": HTMLSteqOrdersListElement;
     }
@@ -120,6 +174,16 @@ declare namespace LocalJSX {
     }
     interface SteqEquipmentList {
     }
+    interface SteqOrderDetail {
+        "onBack"?: (event: SteqOrderDetailCustomEvent<any>) => void;
+        "orderId"?: string;
+    }
+    interface SteqOrderForm {
+        "onCancel"?: (event: SteqOrderFormCustomEvent<any>) => void;
+        "onOrderCreated"?: (event: SteqOrderFormCustomEvent<Order>) => void;
+        "onOrderUpdated"?: (event: SteqOrderFormCustomEvent<Order>) => void;
+        "order"?: Order;
+    }
     interface SteqOrderList {
     }
     interface SteqOrdersList {
@@ -129,6 +193,8 @@ declare namespace LocalJSX {
         "steq-equipment-detail": SteqEquipmentDetail;
         "steq-equipment-form": SteqEquipmentForm;
         "steq-equipment-list": SteqEquipmentList;
+        "steq-order-detail": SteqOrderDetail;
+        "steq-order-form": SteqOrderForm;
         "steq-order-list": SteqOrderList;
         "steq-orders-list": SteqOrdersList;
     }
@@ -141,6 +207,8 @@ declare module "@stencil/core" {
             "steq-equipment-detail": LocalJSX.SteqEquipmentDetail & JSXBase.HTMLAttributes<HTMLSteqEquipmentDetailElement>;
             "steq-equipment-form": LocalJSX.SteqEquipmentForm & JSXBase.HTMLAttributes<HTMLSteqEquipmentFormElement>;
             "steq-equipment-list": LocalJSX.SteqEquipmentList & JSXBase.HTMLAttributes<HTMLSteqEquipmentListElement>;
+            "steq-order-detail": LocalJSX.SteqOrderDetail & JSXBase.HTMLAttributes<HTMLSteqOrderDetailElement>;
+            "steq-order-form": LocalJSX.SteqOrderForm & JSXBase.HTMLAttributes<HTMLSteqOrderFormElement>;
             "steq-order-list": LocalJSX.SteqOrderList & JSXBase.HTMLAttributes<HTMLSteqOrderListElement>;
             "steq-orders-list": LocalJSX.SteqOrdersList & JSXBase.HTMLAttributes<HTMLSteqOrdersListElement>;
         }

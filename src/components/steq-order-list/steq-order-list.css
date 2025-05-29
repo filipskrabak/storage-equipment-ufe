@@ -198,13 +198,3 @@
   font-size: 0.85rem;
   color: var(--md-sys-color-outline);
 }
-
-.disabled-button {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.disabled-button:hover {
-  background-color: transparent !important;
-  color: var(--md-sys-color-outline) !important;
-}

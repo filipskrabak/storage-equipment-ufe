@@ -243,8 +243,14 @@ export class SteqApp {
             )}
 
             {this.currentSection === 'orders' && this.currentView === "list" && (
-            <steq-order-list></steq-order-list>
-          )}
+              <steq-order-list></steq-order-list>
+            )}
+
+            {this.currentSection === 'orders' && this.currentView === "detail" && this.orderId && (
+              <steq-order-detail 
+                orderId={this.orderId}
+              ></steq-order-detail>
+            )}
           </main>
 
           <footer>
