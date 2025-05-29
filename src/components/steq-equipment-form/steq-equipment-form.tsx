@@ -1,5 +1,6 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter } from '@stencil/core';
 import { EquipmentItem } from '../../api/storage-equipment/models';
+import { apiRequest, getApiConfig, ApiError } from '../../utils/api-config';
 
 interface EquipmentFormData {
   name?: string;
@@ -125,43 +126,41 @@ export class SteqEquipmentForm {
 
     try {
       this.loading = true;
+      this.error = null;
+
+      const config = getApiConfig();
 
       if (this.equipment) {
-        const response = await fetch(`http://localhost:5000/api/equipment/${this.equipment.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to update equipment: ${response.statusText}`);
-        }
-
-        const updatedEquipment = await response.json();
+        // Update existing equipment
+        const updatedEquipment = await apiRequest<EquipmentItem>(
+          config.endpoints.equipmentById(this.equipment.id),
+          {
+            method: 'PUT',
+            body: JSON.stringify(this.formData),
+          }
+        );
+        
         this.equipmentUpdated.emit(updatedEquipment);
       } else {
-        const response = await fetch('http://localhost:5000/api/equipment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.formData),
-        });
-
-        if (!response.ok) {
-          throw new Error(`Failed to create equipment: ${response.statusText}`);
-        }
-
-        const createdEquipment = await response.json();
+        // Create new equipment
+        const createdEquipment = await apiRequest<EquipmentItem>(
+          config.endpoints.equipment,
+          {
+            method: 'POST',
+            body: JSON.stringify(this.formData),
+          }
+        );
+        
         this.equipmentCreated.emit(createdEquipment);
       }
 
-      this.error = null;
     } catch (err) {
-      this.error = err.message || 'Failed to save equipment';
-      console.error(this.error);
+      console.error('Failed to save equipment:', err);
+      if (err instanceof ApiError) {
+        this.error = `Failed to save equipment: ${err.message}`;
+      } else {
+        this.error = 'Failed to save equipment';
+      }
     } finally {
       this.loading = false;
     }

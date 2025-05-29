@@ -1,5 +1,6 @@
 import { Component, Host, h, Prop, State, Event, EventEmitter, Element } from '@stencil/core';
 import { EquipmentItem } from '../../api/storage-equipment/models';
+import { apiRequest, getApiConfig, ApiError } from '../../utils/api-config';
 
 @Component({
   tag: 'steq-equipment-detail',
@@ -25,17 +26,21 @@ export class SteqEquipmentDetail {
   async loadEquipment() {
     try {
       this.loading = true;
-      const response = await fetch(`http://localhost:5000/api/equipment/${this.equipmentId}`);
-
-      if (!response.ok) {
-        throw new Error(`Failed to load equipment details: ${response.statusText}`);
-      }
-
-      this.equipment = await response.json();
       this.error = null;
+      
+      const config = getApiConfig();
+      const data = await apiRequest<EquipmentItem>(
+        config.endpoints.equipmentById(this.equipmentId)
+      );
+      this.equipment = data;
+      
     } catch (err) {
-      this.error = err.message || 'Failed to load equipment details';
-      console.error(this.error);
+      console.error('Failed to load equipment details:', err);
+      if (err instanceof ApiError) {
+        this.error = `Failed to load equipment details: ${err.message}`;
+      } else {
+        this.error = 'Failed to load equipment details';
+      }
     } finally {
       this.loading = false;
     }
@@ -109,10 +114,16 @@ export class SteqEquipmentDetail {
             <md-icon>error</md-icon>
             <h3>Failed to load equipment</h3>
             <p>{this.error}</p>
-            <md-outlined-button onClick={this.handleBack}>
-              <md-icon slot="icon">arrow_back</md-icon>
-              Back to List
-            </md-outlined-button>
+            <div class="error-actions">
+              <md-outlined-button onClick={() => this.loadEquipment()}>
+                <md-icon slot="icon">refresh</md-icon>
+                Retry
+              </md-outlined-button>
+              <md-outlined-button onClick={this.handleBack}>
+                <md-icon slot="icon">arrow_back</md-icon>
+                Back to List
+              </md-outlined-button>
+            </div>
           </div>
         </Host>
       );

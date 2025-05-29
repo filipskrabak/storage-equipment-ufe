@@ -9,6 +9,7 @@ import { EquipmentItem } from "./api/storage-equipment/models";
 export { EquipmentItem } from "./api/storage-equipment/models";
 export namespace Components {
     interface SteqApp {
+        "apiBase": string;
         "basePath": string;
     }
     interface SteqEquipmentDetail {
@@ -95,6 +96,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface SteqApp {
+        "apiBase"?: string;
         "basePath"?: string;
     }
     interface SteqEquipmentDetail {

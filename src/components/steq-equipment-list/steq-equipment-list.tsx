@@ -1,5 +1,6 @@
 import { Component, Host, h, State, Element } from '@stencil/core';
 import { EquipmentItem } from '../../api/storage-equipment/models';
+import { apiRequest, getApiConfig, ApiError } from '../../utils/api-config';
 
 @Component({
   tag: 'steq-equipment-list',
@@ -20,17 +21,19 @@ export class SteqEquipmentList {
   async loadEquipment() {
     try {
       this.loading = true;
-      const response = await fetch('http://localhost:5000/api/equipment');
-
-      if (!response.ok) {
-        throw new Error(`Failed to load equipment: ${response.statusText}`);
-      }
-
-      this.equipment = await response.json();
       this.error = null;
+      
+      const config = getApiConfig();
+      const data = await apiRequest<EquipmentItem[]>(config.endpoints.equipment);
+      this.equipment = data || [];
+      
     } catch (err) {
-      this.error = err.message || 'Failed to load equipment';
-      console.error(this.error);
+      console.error('Failed to load equipment:', err);
+      if (err instanceof ApiError) {
+        this.error = `Failed to load equipment: ${err.message}`;
+      } else {
+        this.error = 'Failed to load equipment. Please check if the backend server is running.';
+      }
     } finally {
       this.loading = false;
     }
@@ -42,18 +45,21 @@ export class SteqEquipmentList {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/equipment/${id}`, {
+      const config = getApiConfig();
+      await apiRequest(config.endpoints.equipmentById(id), {
         method: 'DELETE',
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete equipment: ${response.statusText}`);
-      }
-
+      
+      // Remove from local state
       this.equipment = this.equipment.filter(item => item.id !== id);
+      
     } catch (err) {
-      this.error = err.message || 'Failed to delete equipment';
-      console.error(this.error);
+      console.error('Failed to delete equipment:', err);
+      if (err instanceof ApiError) {
+        this.error = `Failed to delete equipment: ${err.message}`;
+      } else {
+        this.error = 'Failed to delete equipment';
+      }
     }
   }
 
@@ -192,6 +198,10 @@ export class SteqEquipmentList {
             <div class="error-banner">
               <md-icon>error</md-icon>
               <span>{this.error}</span>
+              <md-text-button onClick={() => this.loadEquipment()}>
+                <md-icon slot="icon">refresh</md-icon>
+                Retry
+              </md-text-button>
             </div>
           )}
 

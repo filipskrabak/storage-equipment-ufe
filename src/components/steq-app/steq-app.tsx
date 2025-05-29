@@ -1,4 +1,5 @@
-import { Component, Host, h, State, Prop, Listen } from '@stencil/core';
+import { Component, Host, h, State, Prop, Listen, Watch } from '@stencil/core';
+import { setApiBaseUrl } from '../../utils/api-config';
 
 @Component({
   tag: 'steq-app',
@@ -7,10 +8,14 @@ import { Component, Host, h, State, Prop, Listen } from '@stencil/core';
 })
 export class SteqApp {
   @Prop() basePath: string = "";
+  @Prop() apiBase: string = "http://localhost:8080/api";
   @State() currentView: string = "list"; // list, detail, edit
   @State() equipmentId: string = null;
 
   componentWillLoad() {
+    // Set the API base URL for all components
+    this.updateApiBase();
+
     // Listen for navigation events
     if (window.navigation) {
       window.navigation.addEventListener('navigate', this.handleNavigate);
@@ -18,6 +23,13 @@ export class SteqApp {
 
     // Parse initial URL
     this.parseCurrentUrl();
+  }
+
+  @Watch('apiBase')
+  updateApiBase() {
+    if (this.apiBase) {
+      setApiBaseUrl(this.apiBase);
+    }
   }
 
   disconnectedCallback() {
