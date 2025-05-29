@@ -46,13 +46,35 @@ export class SteqApp {
     const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
 
+    // Check if we're on an equipment detail page
     if (path.includes('/equipment/') || params.has('equipmentId')) {
       this.currentView = 'detail';
-      this.equipmentId = path.split('/equipment/')[1] || params.get('equipmentId');
+      // Extract equipment ID from path or params
+      const pathParts = path.split('/equipment/');
+      this.equipmentId = pathParts[1] || params.get('equipmentId');
     } else {
       this.currentView = 'list';
       this.equipmentId = null;
     }
+  }
+
+  private getBasePath(): string {
+    const currentPath = window.location.pathname;
+
+    if (this.basePath && this.basePath !== "/") {
+      return this.basePath;
+    }
+
+    // If we're already on an equipment detail page, extract the base
+    if (currentPath.includes('/equipment/')) {
+      return currentPath.split('/equipment/')[0];
+    }
+    if (currentPath === "/" || currentPath === "") {
+      return "";
+    }
+
+    // Otherwise, use the current path as base
+    return currentPath;
   }
 
   @Listen('view-equipment')
@@ -60,8 +82,10 @@ export class SteqApp {
     this.equipmentId = event.detail.id;
     this.currentView = "detail";
 
-    // Update URL
-    const newUrl = `${this.basePath}equipment/${event.detail.id}`;
+    const basePath = this.getBasePath();
+    // Ensure we don't have double slashes
+    const newUrl = basePath ? `${basePath}/equipment/${event.detail.id}` : `/equipment/${event.detail.id}`;
+
     if (window.navigation && window.navigation.navigate) {
       window.navigation.navigate(newUrl);
     } else {
@@ -74,8 +98,10 @@ export class SteqApp {
     this.equipmentId = event.detail.id;
     this.currentView = "detail";
 
-    // Update URL
-    const newUrl = `${this.basePath}equipment/${event.detail.id}`;
+    const basePath = this.getBasePath();
+    // Ensure we don't have double slashes
+    const newUrl = basePath ? `${basePath}/equipment/${event.detail.id}` : `/equipment/${event.detail.id}`;
+
     if (window.navigation && window.navigation.navigate) {
       window.navigation.navigate(newUrl);
     } else {
@@ -88,8 +114,9 @@ export class SteqApp {
     this.currentView = "list";
     this.equipmentId = null;
 
-    // Update URL
-    const newUrl = this.basePath || '/';
+    const basePath = this.getBasePath();
+    const newUrl = basePath || "/";
+
     if (window.navigation && window.navigation.navigate) {
       window.navigation.navigate(newUrl);
     } else {
