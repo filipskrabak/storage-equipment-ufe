@@ -151,11 +151,11 @@ export class SteqOrderForm {
         const updatedOrder = await apiRequest<Order>(
           config.endpoints.orderById(this.order.id),
           {
-            method: 'PATCH',
+            method: 'PUT',
             body: JSON.stringify(this.formData),
           }
         );
-        
+
         this.orderUpdated.emit(updatedOrder);
       } else {
         // Create new order
@@ -166,7 +166,7 @@ export class SteqOrderForm {
             body: JSON.stringify(this.formData),
           }
         );
-        
+
         this.orderCreated.emit(createdOrder);
       }
 
