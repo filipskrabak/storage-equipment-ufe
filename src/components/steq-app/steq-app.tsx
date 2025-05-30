@@ -92,6 +92,13 @@ export class SteqApp {
     if (currentPath.includes('/orders/')) {
     return currentPath.split('/orders/')[0];
     }
+
+    if (currentPath.endsWith('/orders')) {
+      return currentPath.replace('/orders', '');
+    }
+    if (currentPath.endsWith('/equipment')) {
+      return currentPath.replace('/equipment', '');
+    }
     
     if (currentPath === "/orders" || currentPath === "/equipment") {
       return "";
@@ -101,7 +108,7 @@ export class SteqApp {
     }
 
     // Otherwise, use the current path as base
-    return currentPath;
+    return currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
   }
 
   //Changes URL based on section
