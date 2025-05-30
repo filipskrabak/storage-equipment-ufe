@@ -129,37 +129,12 @@ export class SteqApp {
     this.currentView = 'list';
   }
 
-  private getBasePath(): string {
-    const currentPath = window.location.pathname;
-
-    if (this.basePath && this.basePath !== "/") {
-      return this.basePath;
+  private navigate(url: string) {
+    if (window.navigation && window.navigation.navigate) {
+      window.navigation.navigate(url);
+    } else {
+      window.history.pushState({}, '', url);
     }
-
-    // If we're already on an equipment detail page, extract the base
-    if (currentPath.includes('/equipment/')) {
-      return currentPath.split('/equipment/')[0];
-    }
-    if (currentPath.includes('/orders/')) {
-    return currentPath.split('/orders/')[0];
-    }
-
-    if (currentPath.endsWith('/orders')) {
-      return currentPath.replace('/orders', '');
-    }
-    if (currentPath.endsWith('/equipment')) {
-      return currentPath.replace('/equipment', '');
-    }
-
-    if (currentPath === "/orders" || currentPath === "/equipment") {
-      return "";
-    }
-    if (currentPath === "/" || currentPath === "") {
-      return "";
-    }
-
-    // Otherwise, use the current path as base
-    return currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
   }
 
   navigateToSection(section: 'equipment' | 'orders') {
