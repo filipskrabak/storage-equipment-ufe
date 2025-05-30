@@ -278,7 +278,7 @@ export class SteqOrderForm {
                     <div class="item-card" key={index}>
                       <div class="item-header">
                         <h4>Item {index + 1}</h4>
-                        <md-icon-button onClick={() => this.removeItem(index)}>
+                        <md-icon-button onClick={() => this.removeItem(index)} type="button">
                           <md-icon>delete</md-icon>
                         </md-icon-button>
                       </div>
