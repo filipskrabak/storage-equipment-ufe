@@ -13,6 +13,14 @@ describe('steq-app', () => {
           <div class="app-container">
             <header>
               <h1>Hospital Equipment Management</h1>
+              <nav class="section-nav">
+            <button>
+              Equipment
+            </button>
+            <button>
+              Orders
+            </button>
+          </nav>
             </header>
             <main>
               <steq-equipment-list></steq-equipment-list>
