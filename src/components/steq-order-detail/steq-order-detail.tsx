@@ -95,190 +95,190 @@ export class SteqOrderDetail {
   }
 
   render() {
-  if (this.loading) {
-    return (
-      <Host>
-        <div class="loading-container">
-          <md-circular-progress indeterminate></md-circular-progress>
-          <p>Loading order details...</p>
-        </div>
-      </Host>
-    );
-  }
+    if (this.loading) {
+      return (
+        <Host>
+          <div class="loading-container">
+            <md-circular-progress indeterminate></md-circular-progress>
+            <p>Loading order details...</p>
+          </div>
+        </Host>
+      );
+    }
 
-  if (this.error) {
-    return (
-      <Host>
-        <div class="error-container">
-          <md-icon>error</md-icon>
-          <h3>Failed to load order</h3>
-          <p>{this.error}</p>
-          <div class="error-actions">
-            <md-outlined-button onClick={() => this.loadOrder()}>
-              <md-icon slot="icon">refresh</md-icon>
-              Retry
-            </md-outlined-button>
+    if (this.error) {
+      return (
+        <Host>
+          <div class="error-container">
+            <md-icon>error</md-icon>
+            <h3>Failed to load order</h3>
+            <p>{this.error}</p>
+            <div class="error-actions">
+              <md-outlined-button onClick={() => this.loadOrder()}>
+                <md-icon slot="icon">refresh</md-icon>
+                Retry
+              </md-outlined-button>
+              <md-outlined-button onClick={this.handleBack}>
+                <md-icon slot="icon">arrow_back</md-icon>
+                Back to List
+              </md-outlined-button>
+            </div>
+          </div>
+        </Host>
+      );
+    }
+
+    if (!this.order) {
+      return (
+        <Host>
+          <div class="not-found-container">
+            <md-icon>search_off</md-icon>
+            <h3>Order not found</h3>
+            <p>The requested order could not be found</p>
             <md-outlined-button onClick={this.handleBack}>
               <md-icon slot="icon">arrow_back</md-icon>
               Back to List
             </md-outlined-button>
           </div>
-        </div>
-      </Host>
-    );
-  }
+        </Host>
+      );
+    }
 
-  if (!this.order) {
+    if (this.showEditMode) {
+      return (
+        <Host>
+          <steq-order-form
+            order={this.order}
+            onCancel={this.toggleEditMode}
+            onOrderUpdated={this.handleUpdateComplete}
+          />
+        </Host>
+      );
+    }
+
     return (
       <Host>
-        <div class="not-found-container">
-          <md-icon>search_off</md-icon>
-          <h3>Order not found</h3>
-          <p>The requested order could not be found</p>
-          <md-outlined-button onClick={this.handleBack}>
-            <md-icon slot="icon">arrow_back</md-icon>
-            Back to List
-          </md-outlined-button>
-        </div>
-      </Host>
-    );
-  }
+        <div class="order-detail">
+          <header class="detail-header">
+            <md-outlined-button onClick={this.handleBack}>
+              <md-icon slot="icon">arrow_back</md-icon>
+              Back to List
+            </md-outlined-button>
 
-  if (this.showEditMode) {
-    return (
-      <Host>
-        <steq-order-form
-          order={this.order}
-          onCancel={this.toggleEditMode}
-          onOrderUpdated={this.handleUpdateComplete}
-        />
-      </Host>
-    );
-  }
-
-  return (
-    <Host>
-      <div class="order-detail">
-        <header class="detail-header">
-          <md-outlined-button onClick={this.handleBack}>
-            <md-icon slot="icon">arrow_back</md-icon>
-            Back to List
-          </md-outlined-button>
-
-          <div class="header-content">
-            <div class="order-title">
-              <h1>Order #{this.order.id?.substring(0, 8) || 'Unknown'}</h1>
-              <md-assist-chip
-                class={`status-chip status-${this.getStatusColor(this.order.status)}`}
-                label={this.order.status?.replace('_', ' ') || 'Unknown'}
-              >
-                <md-icon slot="icon">{this.getStatusIcon(this.order.status)}</md-icon>
-              </md-assist-chip>
-            </div>
-          </div>
-
-          {this.order.status === 'pending' && (
-            <md-filled-button onClick={this.toggleEditMode}>
-              <md-icon slot="icon">edit</md-icon>
-              Edit Order
-            </md-filled-button>
-          )}
-        </header>
-
-        <div class="detail-content">
-          <div class="info-card">
-            <div class="card-content">
-              <div class="card-header">
-                <md-icon>person</md-icon>
-                <h2>Order Information</h2>
+            <div class="header-content">
+              <div class="order-title">
+                <h1>Order #{this.order.id?.substring(0, 8) || 'Unknown'}</h1>
+                <md-assist-chip
+                  class={`status-chip status-${this.getStatusColor(this.order.status)}`}
+                  label={this.order.status?.replace('_', ' ') || 'Unknown'}
+                >
+                  <md-icon slot="icon">{this.getStatusIcon(this.order.status)}</md-icon>
+                </md-assist-chip>
               </div>
+            </div>
 
-              <md-divider></md-divider>
+            {this.order.status === 'pending' && (
+              <md-filled-button onClick={this.toggleEditMode}>
+                <md-icon slot="icon">edit</md-icon>
+                Edit Order
+              </md-filled-button>
+            )}
+          </header>
 
-              <div class="info-grid">
-                <div class="info-item">
-                  <div class="info-label">
-                    <md-icon>badge</md-icon>
-                    Requested By
-                  </div>
-                  <div class="info-value">{this.order.requestedBy}</div>
+          <div class="detail-content">
+            <div class="info-card">
+              <div class="card-content">
+                <div class="card-header">
+                  <md-icon>person</md-icon>
+                  <h2>Order Information</h2>
                 </div>
 
-                <div class="info-item">
-                  <div class="info-label">
-                    <md-icon>business</md-icon>
-                    Department
-                  </div>
-                  <div class="info-value">{this.order.requestorDepartment || 'Not specified'}</div>
-                </div>
+                <md-divider></md-divider>
 
-                <div class="info-item">
-                  <div class="info-label">
-                    <md-icon>event</md-icon>
-                    Created
+                <div class="info-grid">
+                  <div class="info-item">
+                    <div class="info-label">
+                      <md-icon>badge</md-icon>
+                      Requested By
+                    </div>
+                    <div class="info-value">{this.order.requestedBy}</div>
                   </div>
-                  <div class="info-value">{this.formatDate(this.order.createdAt)}</div>
-                </div>
 
-                <div class="info-item">
-                  <div class="info-label">
-                    <md-icon>update</md-icon>
-                    Last Updated
+                  <div class="info-item">
+                    <div class="info-label">
+                      <md-icon>business</md-icon>
+                      Department
+                    </div>
+                    <div class="info-value">{this.order.requestorDepartment || 'Not specified'}</div>
                   </div>
-                  <div class="info-value">{this.formatDate(this.order.updatedAt)}</div>
+
+                  <div class="info-item">
+                    <div class="info-label">
+                      <md-icon>event</md-icon>
+                      Created
+                    </div>
+                    <div class="info-value">{this.formatDate(this.order.createdAt)}</div>
+                  </div>
+
+                  <div class="info-item">
+                    <div class="info-label">
+                      <md-icon>update</md-icon>
+                      Last Updated
+                    </div>
+                    <div class="info-value">{this.formatDate(this.order.updatedAt)}</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="info-card">
-            <div class="card-content">
-              <div class="card-header">
-                <md-icon>shopping_cart</md-icon>
-                <h2>Order Items</h2>
-              </div>
+            <div class="info-card">
+              <div class="card-content">
+                <div class="card-header">
+                  <md-icon>shopping_cart</md-icon>
+                  <h2>Order Items</h2>
+                </div>
 
-              <md-divider></md-divider>
+                <md-divider></md-divider>
 
-              <div class="items-list">
-                {this.order.items?.length > 0 ? (
-                  this.order.items.map(item => (
-                    <div class="item-row">
-                      <div class="item-info">
-                        <div class="item-name">
-                          <md-icon>inventory_2</md-icon>
-                          {item.equipmentName}
-                        </div>
-                        <div class="item-details">
-                          Quantity: {item.quantity} • 
-                          Unit Price: ${item.unitPrice?.toFixed(2) || '0.00'} • 
-                          Total: ${item.totalPrice?.toFixed(2) || '0.00'}
+                <div class="items-list">
+                  {this.order.items?.length > 0 ? (
+                    this.order.items.map(item => (
+                      <div class="item-row">
+                        <div class="item-info">
+                          <div class="item-name">
+                            <md-icon>inventory_2</md-icon>
+                            {item.equipmentName}
+                          </div>
+                          <div class="item-details">
+                            Quantity: {item.quantity} • 
+                            Unit Price: ${item.unitPrice?.toFixed(2) || '0.00'} • 
+                            Total: ${item.totalPrice?.toFixed(2) || '0.00'}
+                          </div>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <div class="no-items">
+                      <md-icon>inventory</md-icon>
+                      <p>No items in this order</p>
                     </div>
-                  ))
-                ) : (
-                  <div class="no-items">
-                    <md-icon>inventory</md-icon>
-                    <p>No items in this order</p>
+                  )}
+                </div>
+
+                {this.order.items?.length > 0 && (
+                  <div class="order-total">
+                    <md-divider></md-divider>
+                    <div class="total-row">
+                      <span class="total-label">Total Order Value:</span>
+                      <span class="total-amount">${this.getTotalPrice().toFixed(2)}</span>
+                    </div>
                   </div>
                 )}
               </div>
-
-              {this.order.items?.length > 0 && (
-                <div class="order-total">
-                  <md-divider></md-divider>
-                  <div class="total-row">
-                    <span class="total-label">Total Order Value:</span>
-                    <span class="total-amount">${this.getTotalPrice().toFixed(2)}</span>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
-      </div>
-    </Host>
-  );
-}
+      </Host>
+    );
+  }
 }

@@ -5,7 +5,7 @@ import { apiRequest, getApiConfig, ApiError } from '../../utils/api-config';
 interface OrderFormData {
   requestedBy?: string;
   requestorDepartment?: string;
-  status?: 'pending' | 'sent' | 'delivered' | 'cancelled';
+  status?: 'pending' | 'delivered' | 'cancelled';
   notes?: string;
   items?: Array<{
     equipmentName: string;
@@ -68,7 +68,7 @@ export class SteqOrderForm {
       [field]: value
     };
 
-    // Recalculate total price for this item
+    // Recalculate total price
     if (field === 'quantity' || field === 'unitPrice') {
       const item = updatedItems[index];
       item.totalPrice = (item.quantity || 0) * (item.unitPrice || 0);
@@ -106,11 +106,9 @@ export class SteqOrderForm {
     const errors: Record<string, string> = {};
     const required = ['requestedBy', 'requestorDepartment'];
 
-    required.forEach(field => {
-      if (!this.formData[field]) {
-        errors[field] = 'This field is required';
-      }
-    });
+    if(!this.formData['requestedBy']) {
+      errors['requestedBy'] = 'This field is required';
+    }
 
     // Validate items
     if (!this.formData.items || this.formData.items.length === 0) {
@@ -153,7 +151,7 @@ export class SteqOrderForm {
         const updatedOrder = await apiRequest<Order>(
           config.endpoints.orderById(this.order.id),
           {
-            method: 'PUT',
+            method: 'PATCH',
             body: JSON.stringify(this.formData),
           }
         );
@@ -250,9 +248,6 @@ export class SteqOrderForm {
                   <md-select-option value="pending">
                     <div slot="headline">Pending</div>
                   </md-select-option>
-                  <md-select-option value="sent">
-                    <div slot="headline">Sent</div>
-                  </md-select-option>
                   <md-select-option value="delivered">
                     <div slot="headline">Delivered</div>
                   </md-select-option>
@@ -344,7 +339,7 @@ export class SteqOrderForm {
                     <div class="no-items">
                       <md-icon>inventory</md-icon>
                       <p>No items added yet</p>
-                      <p>Click "Add Item" to get started</p>
+                      <p>Click "Add Item" to add new order item</p>
                     </div>
                   )}
                 </div>
