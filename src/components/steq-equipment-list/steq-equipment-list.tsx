@@ -22,11 +22,11 @@ export class SteqEquipmentList {
     try {
       this.loading = true;
       this.error = null;
-      
+
       const config = getApiConfig();
       const data = await apiRequest<EquipmentItem[]>(config.endpoints.equipment);
       this.equipment = data || [];
-      
+
     } catch (err) {
       console.error('Failed to load equipment:', err);
       if (err instanceof ApiError) {
@@ -49,10 +49,10 @@ export class SteqEquipmentList {
       await apiRequest(config.endpoints.equipmentById(id), {
         method: 'DELETE',
       });
-      
+
       // Remove from local state
       this.equipment = this.equipment.filter(item => item.id !== id);
-      
+
     } catch (err) {
       console.error('Failed to delete equipment:', err);
       if (err instanceof ApiError) {
@@ -117,17 +117,18 @@ export class SteqEquipmentList {
 
             <div slot="headline">{item.name}</div>
             <div slot="supporting-text">
-              {item.manufacturer} {item.model || ''} • {item.location}
-            </div>
-
-            <div slot="trailing-supporting-text">
-              Next service: {item.nextService || 'Not scheduled'}
+              {item.manufacturer} {item.model} | Serial: {item.serialNumber} | Location: {item.location}
             </div>
 
             <div slot="end" class="equipment-actions">
+              <div class="trailing-text">
+                Next service: {item.nextService || 'Not scheduled'}
+              </div>
+
               <md-filter-chip
                 class={`status-chip status-${this.getStatusChipType(item.status)}`}
                 label={item.status?.replace('_', ' ') || 'Unknown'}
+                selected
               >
                 <md-icon slot="icon">{this.getStatusIcon(item.status)}</md-icon>
               </md-filter-chip>
@@ -137,12 +138,10 @@ export class SteqEquipmentList {
                   <md-icon slot="icon">visibility</md-icon>
                   View
                 </md-text-button>
-
-                <md-outlined-button onClick={() => this.editEquipment(item.id)}>
+                <md-text-button onClick={() => this.editEquipment(item.id)}>
                   <md-icon slot="icon">edit</md-icon>
                   Edit
-                </md-outlined-button>
-
+                </md-text-button>
                 <md-text-button
                   class="delete-button"
                   onClick={() => this.deleteEquipment(item.id)}

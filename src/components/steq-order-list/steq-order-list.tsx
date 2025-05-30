@@ -49,10 +49,10 @@ export class SteqOrderList {
       await apiRequest(config.endpoints.orderById(id), {
         method: 'DELETE',
       });
-      
+
       // Remove from local state
       this.orders = this.orders.filter(order => order.id !== id);
-      
+
     } catch (err) {
       console.error('Failed to cancel order:', err);
       if (err instanceof ApiError) {
@@ -92,7 +92,7 @@ export class SteqOrderList {
 
   formatDate(dateString: Date): string {
     if (!dateString) return 'Not set';
-  
+
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
@@ -108,7 +108,7 @@ export class SteqOrderList {
     if (order.items.length === 1) return order.items[0].equipmentName;
     return `${order.items[0].equipmentName} +${order.items.length - 1} more`;
   }
-  
+
 
   renderOrdersList() {
     if (this.orders.length === 0) {
@@ -128,25 +128,27 @@ export class SteqOrderList {
     return (
       <md-list>
         {this.orders.map(order => (
-          <md-list-item key={order.id} class="order-item">
+          <md-list-item class="order-item">
             <div slot="start" class="order-icon">
               <md-icon>{this.getStatusIcon(order.status)}</md-icon>
             </div>
 
-            <div slot="headline">Order #{order.id?.substring(0, 8) || 'Unknown'}</div>
+            <div slot="headline">Order #{order.id.substring(0, 8)}</div>
             <div slot="supporting-text">
-              {order.requestedBy} • {order.requestorDepartment || 'Unknown Dept'} • {this.getItemsSummary(order)}
-            </div>
-
-            <div slot="trailing-supporting-text">
-              Created: {this.formatDate(order.createdAt)}
+              {order.requestedBy} | {order.requestorDepartment} | {order.items?.length || 0} items
             </div>
 
             <div slot="end" class="order-actions">
+              {/* Move trailing text here */}
+              <div class="trailing-text">
+                Created: {this.formatDate(order.createdAt)}
+              </div>
+
               <div class="status-priority-chips">
                 <md-filter-chip
-                  class={`status-chip status-${this.getStatusChipType(order.status)}`}
+                  class={`status-chip status-${order.status}`}
                   label={order.status?.replace('_', ' ') || 'Unknown'}
+                  selected
                 >
                   <md-icon slot="icon">{this.getStatusIcon(order.status)}</md-icon>
                 </md-filter-chip>
@@ -157,20 +159,13 @@ export class SteqOrderList {
                   <md-icon slot="icon">visibility</md-icon>
                   View
                 </md-text-button>
-
-                <md-outlined-button 
-                  disabled={order.status !== 'pending'}
-                  class={order.status !== 'pending' ? 'disabled-button' : ''}
-                  onClick={() => order.status === 'pending' ? this.editOrder(order.id) : null}
-                >
+                <md-text-button onClick={() => this.editOrder(order.id)}>
                   <md-icon slot="icon">edit</md-icon>
                   Edit
-                </md-outlined-button>
-
+                </md-text-button>
                 <md-text-button
-                  class={`delete-button ${order.status !== 'pending' ? 'disabled-button' : ''}`}
-                  disabled={order.status !== 'pending'}
-                  onClick={() => order.status === 'pending' ? this.deleteOrder(order.id) : null}
+                  class="cancel-button"
+                  onClick={() => this.deleteOrder(order.id)}
                 >
                   <md-icon slot="icon">cancel</md-icon>
                   Cancel
