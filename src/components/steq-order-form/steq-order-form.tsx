@@ -260,7 +260,7 @@ export class SteqOrderForm {
               <section class="form-section">
                 <div class="section-header">
                   <h3>Order Items</h3>
-                  <md-outlined-button onClick={this.addItem}>
+                  <md-outlined-button onClick={this.addItem} type="button">
                     <md-icon slot="icon">add</md-icon>
                     Add Item
                   </md-outlined-button>
