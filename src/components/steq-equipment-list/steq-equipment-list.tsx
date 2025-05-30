@@ -138,10 +138,6 @@ export class SteqEquipmentList {
                   <md-icon slot="icon">visibility</md-icon>
                   View
                 </md-text-button>
-                <md-text-button onClick={() => this.editEquipment(item.id)}>
-                  <md-icon slot="icon">edit</md-icon>
-                  Edit
-                </md-text-button>
                 <md-text-button
                   class="delete-button"
                   onClick={() => this.deleteEquipment(item.id)}

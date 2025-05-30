@@ -30,8 +30,6 @@ export namespace Components {
     }
     interface SteqOrderList {
     }
-    interface SteqOrdersList {
-    }
 }
 export interface SteqEquipmentDetailCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -140,12 +138,6 @@ declare global {
         prototype: HTMLSteqOrderListElement;
         new (): HTMLSteqOrderListElement;
     };
-    interface HTMLSteqOrdersListElement extends Components.SteqOrdersList, HTMLStencilElement {
-    }
-    var HTMLSteqOrdersListElement: {
-        prototype: HTMLSteqOrdersListElement;
-        new (): HTMLSteqOrdersListElement;
-    };
     interface HTMLElementTagNameMap {
         "steq-app": HTMLSteqAppElement;
         "steq-equipment-detail": HTMLSteqEquipmentDetailElement;
@@ -154,7 +146,6 @@ declare global {
         "steq-order-detail": HTMLSteqOrderDetailElement;
         "steq-order-form": HTMLSteqOrderFormElement;
         "steq-order-list": HTMLSteqOrderListElement;
-        "steq-orders-list": HTMLSteqOrdersListElement;
     }
 }
 declare namespace LocalJSX {
@@ -186,8 +177,6 @@ declare namespace LocalJSX {
     }
     interface SteqOrderList {
     }
-    interface SteqOrdersList {
-    }
     interface IntrinsicElements {
         "steq-app": SteqApp;
         "steq-equipment-detail": SteqEquipmentDetail;
@@ -196,7 +185,6 @@ declare namespace LocalJSX {
         "steq-order-detail": SteqOrderDetail;
         "steq-order-form": SteqOrderForm;
         "steq-order-list": SteqOrderList;
-        "steq-orders-list": SteqOrdersList;
     }
 }
 export { LocalJSX as JSX };
@@ -210,7 +198,6 @@ declare module "@stencil/core" {
             "steq-order-detail": LocalJSX.SteqOrderDetail & JSXBase.HTMLAttributes<HTMLSteqOrderDetailElement>;
             "steq-order-form": LocalJSX.SteqOrderForm & JSXBase.HTMLAttributes<HTMLSteqOrderFormElement>;
             "steq-order-list": LocalJSX.SteqOrderList & JSXBase.HTMLAttributes<HTMLSteqOrderListElement>;
-            "steq-orders-list": LocalJSX.SteqOrdersList & JSXBase.HTMLAttributes<HTMLSteqOrdersListElement>;
         }
     }
 }

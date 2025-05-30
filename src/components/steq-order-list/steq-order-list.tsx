@@ -159,10 +159,6 @@ export class SteqOrderList {
                   <md-icon slot="icon">visibility</md-icon>
                   View
                 </md-text-button>
-                <md-text-button onClick={() => this.editOrder(order.id)}>
-                  <md-icon slot="icon">edit</md-icon>
-                  Edit
-                </md-text-button>
                 <md-text-button
                   class="cancel-button"
                   onClick={() => this.deleteOrder(order.id)}
