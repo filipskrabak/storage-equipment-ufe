@@ -44,38 +44,89 @@ export class SteqApp {
     this.parseCurrentUrl();
   }
 
+  private getAppBasePath(): string {
+    const currentPath = window.location.pathname;
+
+    // If basePath prop is provided and not root, use it
+    if (this.basePath && this.basePath !== "/") {
+      return this.basePath.replace(/\/$/, ''); // Remove trailing slash
+    }
+
+    // For Polyfea context, detect the base from current path
+    if (currentPath.includes('/fea/steq-storage-equipment')) {
+      return '/fea/steq-storage-equipment';
+    }
+
+    // Extract base path if we're in equipment or orders section
+    const equipmentMatch = currentPath.match(/^(.*)\/equipment(?:\/.*)?$/);
+    if (equipmentMatch) {
+      return equipmentMatch[1] || '';
+    }
+
+    const ordersMatch = currentPath.match(/^(.*)\/orders(?:\/.*)?$/);
+    if (ordersMatch) {
+      return ordersMatch[1] || '';
+    }
+
+    // For development mode (localhost:3333)
+    if (currentPath === "/" || currentPath === "") {
+      return "";
+    }
+
+    return currentPath;
+  }
+
+  private buildUrl(section: 'equipment' | 'orders', id?: string): string {
+    const basePath = this.getAppBasePath();
+
+    if (section === 'equipment') {
+      if (id) {
+        return basePath ? `${basePath}/equipment/${id}` : `/equipment/${id}`;
+      } else {
+        return basePath || '/';
+      }
+    } else { // orders
+      if (id) {
+        return basePath ? `${basePath}/orders/${id}` : `/orders/${id}`;
+      } else {
+        return basePath ? `${basePath}/orders` : `/orders`;
+      }
+    }
+  }
+
   parseCurrentUrl() {
     const path = window.location.pathname;
     const params = new URLSearchParams(window.location.search);
 
-    if (path.includes('/orders')) {
-    this.currentSection = 'orders';
-      // Check if we're on a specific order
-      if (path.match(/\/orders\/[^\/]+/) || params.has('orderID')) {
+    // Reset state
+    this.equipmentId = null;
+    this.orderId = null;
+
+    // Check for orders
+    const ordersMatch = path.match(/\/orders(?:\/([^\/]+))?/);
+    if (ordersMatch) {
+      this.currentSection = 'orders';
+      if (ordersMatch[1] || params.has('orderID')) {
         this.currentView = 'detail';
-        const pathParts = path.split('/orders/');
-        this.orderId = pathParts[1] || params.get('orderID');
+        this.orderId = ordersMatch[1] || params.get('orderID');
       } else {
         this.currentView = 'list';
-        this.orderId = null;
       }
-      
-    this.equipmentId = null; // Clear equipment when in orders
-    } 
+      return;
+    }
 
-    else if (path.includes('/equipment/') || params.has('equipmentId')) {
+    // Check for equipment
+    const equipmentMatch = path.match(/\/equipment\/([^\/]+)/);
+    if (equipmentMatch || params.has('equipmentId')) {
       this.currentSection = 'equipment';
       this.currentView = 'detail';
-      const pathParts = path.split('/equipment/');
-      this.equipmentId = pathParts[1] || params.get('equipmentId');
-      this.orderId = null; // Clear order when in equipment
-    } 
-    else {
-      this.currentSection = 'equipment';
-      this.currentView = 'list';
-      this.equipmentId = null;
-      this.orderId = null;
+      this.equipmentId = equipmentMatch ? equipmentMatch[1] : params.get('equipmentId');
+      return;
     }
+
+    // Default to equipment list
+    this.currentSection = 'equipment';
+    this.currentView = 'list';
   }
 
   private getBasePath(): string {
@@ -99,7 +150,7 @@ export class SteqApp {
     if (currentPath.endsWith('/equipment')) {
       return currentPath.replace('/equipment', '');
     }
-    
+
     if (currentPath === "/orders" || currentPath === "/equipment") {
       return "";
     }
@@ -111,58 +162,58 @@ export class SteqApp {
     return currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
   }
 
-  //Changes URL based on section
-  navigateToSection(section: string) {
-  //Clicking nav buttons always goes to list
-  this.currentSection = section;
-  this.currentView = 'list';
-  this.equipmentId = null;
-  this.orderId = null;
+  navigateToSection(section: 'equipment' | 'orders') {
+    this.currentSection = section;
+    this.currentView = 'list';
+    this.equipmentId = null;
+    this.orderId = null;
 
-  const basePath = this.getBasePath();
-  const newUrl = section === 'orders' 
-    ? (basePath ? `${basePath}/orders` : `/orders`)
-    : (basePath || "/");
-
-  if (window.navigation && window.navigation.navigate) {
-    window.navigation.navigate(newUrl);
-  } else {
-    window.history.pushState({}, '', newUrl);
-    }
+    const url = this.buildUrl(section);
+    this.navigate(url);
   }
 
   @Listen('view-equipment')
   handleViewEquipment(event: CustomEvent) {
-    this.equipmentId = event.detail.id;
     this.currentSection = 'equipment';
     this.currentView = "detail";
+    this.equipmentId = event.detail.id;
+    this.orderId = null;
 
-    const basePath = this.getBasePath();
-    // Ensure we don't have double slashes
-    const newUrl = basePath ? `${basePath}/equipment/${event.detail.id}` : `/equipment/${event.detail.id}`;
-
-    if (window.navigation && window.navigation.navigate) {
-      window.navigation.navigate(newUrl);
-    } else {
-      window.history.pushState({}, '', newUrl);
-    }
+    const url = this.buildUrl('equipment', event.detail.id);
+    this.navigate(url);
   }
 
   @Listen('edit-equipment')
   handleEditEquipment(event: CustomEvent) {
-    this.equipmentId = event.detail.id;
     this.currentSection = 'equipment';
     this.currentView = "detail";
+    this.equipmentId = event.detail.id;
+    this.orderId = null;
 
-    const basePath = this.getBasePath();
-    // Ensure we don't have double slashes
-    const newUrl = basePath ? `${basePath}/equipment/${event.detail.id}` : `/equipment/${event.detail.id}`;
+    const url = this.buildUrl('equipment', event.detail.id);
+    this.navigate(url);
+  }
 
-    if (window.navigation && window.navigation.navigate) {
-      window.navigation.navigate(newUrl);
-    } else {
-      window.history.pushState({}, '', newUrl);
-    }
+  @Listen('view-order')
+  handleViewOrder(event: CustomEvent) {
+    this.currentSection = 'orders';
+    this.currentView = "detail";
+    this.orderId = event.detail.id;
+    this.equipmentId = null;
+
+    const url = this.buildUrl('orders', event.detail.id);
+    this.navigate(url);
+  }
+
+  @Listen('edit-order')
+  handleEditOrder(event: CustomEvent) {
+    this.currentSection = 'orders';
+    this.currentView = "detail";
+    this.orderId = event.detail.id;
+    this.equipmentId = null;
+
+    const url = this.buildUrl('orders', event.detail.id);
+    this.navigate(url);
   }
 
   @Listen('back')
@@ -171,49 +222,8 @@ export class SteqApp {
     this.equipmentId = null;
     this.orderId = null;
 
-    const basePath = this.getBasePath();
-
-    const newUrl = this.currentSection === 'orders' 
-    ? (basePath ? `${basePath}/orders` : `/orders`)
-    : (basePath || "/");
-
-    if (window.navigation && window.navigation.navigate) {
-      window.navigation.navigate(newUrl);
-    } else {
-      window.history.pushState({}, '', newUrl);
-    }
-  }
-
-  @Listen('view-order')
-  handleViewOrder(event: CustomEvent) {
-    this.orderId = event.detail.id;
-    this.currentSection = 'orders';
-    this.currentView = "detail";
-
-    const basePath = this.getBasePath();
-    const newUrl = basePath ? `${basePath}/orders/${event.detail.id}` : `/orders/${event.detail.id}`;
-
-    if (window.navigation && window.navigation.navigate) {
-      window.navigation.navigate(newUrl);
-    } else {
-      window.history.pushState({}, '', newUrl);
-    }
-  }
-
-  @Listen('edit-order')
-  handleEditOrder(event: CustomEvent) {
-    this.orderId = event.detail.id;
-    this.currentSection = 'orders';
-    this.currentView = "detail";
-
-    const basePath = this.getBasePath();
-    const newUrl = basePath ? `${basePath}/orders/${event.detail.id}` : `/orders/${event.detail.id}`;
-
-    if (window.navigation && window.navigation.navigate) {
-      window.navigation.navigate(newUrl);
-    } else {
-      window.history.pushState({}, '', newUrl);
-    }
+    const url = this.buildUrl(this.currentSection as 'equipment' | 'orders');
+    this.navigate(url);
   }
 
   render() {
@@ -223,19 +233,19 @@ export class SteqApp {
           <header>
             <h1>Hospital Equipment Management</h1>
             <nav class="section-nav">
-            <button 
-              class={this.currentSection === 'equipment' ? 'active' : ''}
-              onClick={() => this.navigateToSection('equipment')}
-            >
-              Equipment
-            </button>
-            <button 
-              class={this.currentSection === 'orders' ? 'active' : ''}
-              onClick={() => this.navigateToSection('orders')}
-            >
-              Orders
-            </button>
-          </nav>
+              <button
+                class={this.currentSection === 'equipment' ? 'active' : ''}
+                onClick={() => this.navigateToSection('equipment')}
+              >
+                Equipment
+              </button>
+              <button
+                class={this.currentSection === 'orders' ? 'active' : ''}
+                onClick={() => this.navigateToSection('orders')}
+              >
+                Orders
+              </button>
+            </nav>
           </header>
 
           <main>
@@ -254,7 +264,7 @@ export class SteqApp {
             )}
 
             {this.currentSection === 'orders' && this.currentView === "detail" && this.orderId && (
-              <steq-order-detail 
+              <steq-order-detail
                 orderId={this.orderId}
               ></steq-order-detail>
             )}
