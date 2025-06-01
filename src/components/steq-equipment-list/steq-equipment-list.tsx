@@ -125,13 +125,12 @@ export class SteqEquipmentList {
                 Next service: {item.nextService || 'Not scheduled'}
               </div>
 
-              <md-filter-chip
+              <md-assist-chip
                 class={`status-chip status-${this.getStatusChipType(item.status)}`}
                 label={item.status?.replace('_', ' ') || 'Unknown'}
-                selected
               >
                 <md-icon slot="icon">{this.getStatusIcon(item.status)}</md-icon>
-              </md-filter-chip>
+              </md-assist-chip>
 
               <div class="action-buttons">
                 <md-text-button onClick={() => this.viewEquipment(item.id)}>

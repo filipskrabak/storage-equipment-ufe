@@ -72,35 +72,142 @@ export class SteqEquipmentForm {
     }
   }
 
-  handleInputChange = (field: string, value: string | number) => {
-    this.formData = {
-      ...this.formData,
-      [field]: value
-    };
-
-    if (this.validationErrors[field]) {
-      const newErrors = { ...this.validationErrors };
-      delete newErrors[field];
-      this.validationErrors = newErrors;
-    }
-  }
-
   validateForm(): boolean {
     const errors: Record<string, string> = {};
     const required = ['name', 'serialNumber', 'manufacturer', 'location'];
 
+    // Required field validation
     required.forEach(field => {
-      if (!this.formData[field]) {
+      if (!this.formData[field] || this.formData[field].toString().trim() === '') {
         errors[field] = 'This field is required';
       }
     });
 
+    console.log(this.formData.serviceInterval, this.formData.lifeExpectancy);
+
+    if (this.formData.serviceInterval !== undefined && this.formData.serviceInterval !== null && this.formData.serviceInterval < 0) {
+      errors.serviceInterval = 'Service interval cannot be negative';
+    }
+
+    if (this.formData.lifeExpectancy !== undefined && this.formData.lifeExpectancy !== null && this.formData.lifeExpectancy < 0) {
+      errors.lifeExpectancy = 'Life expectancy cannot be negative';
+    }
+
+    // Name validation
+    if (this.formData.name && this.formData.name.length < 3) {
+      errors.name = 'Equipment name must be at least 3 characters long';
+    }
+    if (this.formData.name && this.formData.name.length > 100) {
+      errors.name = 'Equipment name cannot exceed 100 characters';
+    }
+
+    // Serial number validation
+    if (this.formData.serialNumber) {
+      const serialRegex = /^[A-Z0-9\-_]+$/i;
+      if (!serialRegex.test(this.formData.serialNumber)) {
+        errors.serialNumber = 'Serial number can only contain letters, numbers, hyphens, and underscores';
+      }
+      if (this.formData.serialNumber.length < 3) {
+        errors.serialNumber = 'Serial number must be at least 3 characters long';
+      }
+      if (this.formData.serialNumber.length > 50) {
+        errors.serialNumber = 'Serial number cannot exceed 50 characters';
+      }
+    }
+
+    // Manufacturer validation
+    if (this.formData.manufacturer && this.formData.manufacturer.length < 2) {
+      errors.manufacturer = 'Manufacturer name must be at least 2 characters long';
+    }
+    if (this.formData.manufacturer && this.formData.manufacturer.length > 50) {
+      errors.manufacturer = 'Manufacturer name cannot exceed 50 characters';
+    }
+
+    // Model validation (optional but if provided, validate)
+    if (this.formData.model && this.formData.model.length > 50) {
+      errors.model = 'Model name cannot exceed 50 characters';
+    }
+
+    // Location validation
+    if (this.formData.location && this.formData.location.length < 3) {
+      errors.location = 'Location must be at least 3 characters long';
+    }
+    if (this.formData.location && this.formData.location.length > 100) {
+      errors.location = 'Location cannot exceed 100 characters';
+    }
+
+    // Date validation
     if (this.formData.installationDate && !this.isValidDate(this.formData.installationDate)) {
-      errors.installationDate = 'Please provide a valid date';
+      errors.installationDate = 'Please provide a valid installation date';
     }
 
     if (this.formData.lastService && !this.isValidDate(this.formData.lastService)) {
-      errors.lastService = 'Please provide a valid date';
+      errors.lastService = 'Please provide a valid last service date';
+    }
+
+    // Business logic date validation
+    if (this.formData.installationDate && this.isValidDate(this.formData.installationDate)) {
+      const installationDate = new Date(this.formData.installationDate);
+      const today = new Date();
+      const futureLimit = new Date();
+      futureLimit.setFullYear(today.getFullYear() + 1); // Allow up to 1 year in the future
+
+      // Installation date cannot be too far in the future
+      if (installationDate > futureLimit) {
+        errors.installationDate = 'Installation date cannot be more than 1 year in the future';
+      }
+
+      // Installation date cannot be too far in the past (50 years)
+      const pastLimit = new Date();
+      pastLimit.setFullYear(today.getFullYear() - 50);
+      if (installationDate < pastLimit) {
+        errors.installationDate = 'Installation date cannot be more than 50 years in the past';
+      }
+    }
+
+    // Service interval validation
+    if (this.formData.serviceInterval !== undefined && this.formData.serviceInterval !== null) {
+      if (this.formData.serviceInterval <= 0) {
+        errors.serviceInterval = 'Service interval must be a positive number';
+      }
+      if (this.formData.serviceInterval < 1) {
+        errors.serviceInterval = 'Service interval must be at least 1 day';
+      }
+      if (this.formData.serviceInterval > 3650) { // 10 years max
+        errors.serviceInterval = 'Service interval cannot exceed 10 years (3650 days)';
+      }
+      if (!Number.isInteger(this.formData.serviceInterval)) {
+        errors.serviceInterval = 'Service interval must be a whole number of days';
+      }
+    }
+
+    // Life expectancy validation
+    if (this.formData.lifeExpectancy !== undefined && this.formData.lifeExpectancy !== null) {
+      if (this.formData.lifeExpectancy <= 0) {
+        errors.lifeExpectancy = 'Life expectancy must be a positive number';
+      }
+      if (this.formData.lifeExpectancy < 1) {
+        errors.lifeExpectancy = 'Life expectancy must be at least 1 year';
+      }
+      if (this.formData.lifeExpectancy > 100) {
+        errors.lifeExpectancy = 'Life expectancy cannot exceed 100 years';
+      }
+      if (!Number.isInteger(this.formData.lifeExpectancy)) {
+        errors.lifeExpectancy = 'Life expectancy must be a whole number of years';
+      }
+    }
+
+    // Notes validation (optional but if provided, validate length)
+    if (this.formData.notes && this.formData.notes.length > 1000) {
+      errors.notes = 'Notes cannot exceed 1000 characters';
+    }
+
+    // Cross-field validation: Service interval vs Life expectancy
+    if (this.formData.serviceInterval && this.formData.lifeExpectancy) {
+      const totalServiceDays = this.formData.lifeExpectancy * 365;
+      if (this.formData.serviceInterval > totalServiceDays) {
+        errors.serviceInterval = 'Service interval should not exceed the equipment life expectancy';
+      }
     }
 
     this.validationErrors = errors;
@@ -112,7 +219,45 @@ export class SteqEquipmentForm {
     if (!regex.test(dateString)) return false;
 
     const date = new Date(dateString);
-    return date instanceof Date && !isNaN(date.getTime());
+    const isValidDate = date instanceof Date && !isNaN(date.getTime());
+
+    // Additional check: ensure the date string matches the parsed date
+    // This catches cases like "2023-02-30" which would be parsed as "2023-03-02"
+    if (isValidDate) {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return date.getFullYear() === year &&
+             date.getMonth() === month - 1 &&
+             date.getDate() === day;
+    }
+
+    return false;
+  }
+
+  handleInputChange = (field: string, value: string | number) => {
+    // Special handling for numeric fields
+    if (field === 'serviceInterval' || field === 'lifeExpectancy') {
+      const numValue = typeof value === 'string' ? parseInt(value) : value;
+
+      // Only update if it's a valid number or empty
+      if (value === '' || value === null || !isNaN(numValue)) {
+        this.formData = {
+          ...this.formData,
+          [field]: value === '' ? null : numValue
+        };
+      }
+    } else {
+      this.formData = {
+        ...this.formData,
+        [field]: value
+      };
+    }
+
+    // Clear validation error for this field
+    if (this.validationErrors[field]) {
+      const newErrors = { ...this.validationErrors };
+      delete newErrors[field];
+      this.validationErrors = newErrors;
+    }
   }
 
   handleCancel = () => {
@@ -139,7 +284,7 @@ export class SteqEquipmentForm {
             body: JSON.stringify(this.formData),
           }
         );
-        
+
         this.equipmentUpdated.emit(updatedEquipment);
       } else {
         // Create new equipment
@@ -150,7 +295,7 @@ export class SteqEquipmentForm {
             body: JSON.stringify(this.formData),
           }
         );
-        
+
         this.equipmentCreated.emit(createdEquipment);
       }
 
@@ -164,6 +309,18 @@ export class SteqEquipmentForm {
     } finally {
       this.loading = false;
     }
+  }
+
+  calculateNextServiceDate(): string {
+    if (!this.formData.lastService || !this.formData.serviceInterval) {
+      return '';
+    }
+
+    const lastServiceDate = new Date(this.formData.lastService);
+    const nextServiceDate = new Date(lastServiceDate);
+    nextServiceDate.setDate(lastServiceDate.getDate() + this.formData.serviceInterval);
+
+    return this.formatDateForInput(nextServiceDate);
   }
 
   render() {
@@ -273,11 +430,17 @@ export class SteqEquipmentForm {
                 <md-outlined-text-field
                   label="Service Interval (days)"
                   type="number"
-                  min="0"
+                  min="1"
+                  max="3650"
+                  step="1"
                   value={this.formData.serviceInterval?.toString() || ''}
-                  onInput={(e: InputEvent) =>
-                    this.handleInputChange('serviceInterval', parseInt((e.target as HTMLInputElement).value) || 0)
-                  }
+                  error={!!this.validationErrors.serviceInterval}
+                  error-text={this.validationErrors.serviceInterval || ''}
+                  supporting-text="How often the equipment needs service (1-3650 days)"
+                  onInput={(e: InputEvent) => {
+                    const value = (e.target as HTMLInputElement).value;
+                    this.handleInputChange('serviceInterval', value === '' ? null : parseInt(value));
+                  }}
                 >
                   <md-icon slot="leading-icon">schedule</md-icon>
                 </md-outlined-text-field>
@@ -298,11 +461,17 @@ export class SteqEquipmentForm {
                 <md-outlined-text-field
                   label="Life Expectancy (years)"
                   type="number"
-                  min="0"
+                  min="1"
+                  max="100"
+                  step="1"
                   value={this.formData.lifeExpectancy?.toString() || ''}
-                  onInput={(e: InputEvent) =>
-                    this.handleInputChange('lifeExpectancy', parseInt((e.target as HTMLInputElement).value) || 0)
-                  }
+                  error={!!this.validationErrors.lifeExpectancy}
+                  error-text={this.validationErrors.lifeExpectancy || ''}
+                  supporting-text="Expected lifespan of the equipment (1-100 years)"
+                  onInput={(e: InputEvent) => {
+                    const value = (e.target as HTMLInputElement).value;
+                    this.handleInputChange('lifeExpectancy', value === '' ? null : parseInt(value));
+                  }}
                 >
                   <md-icon slot="leading-icon">timeline</md-icon>
                 </md-outlined-text-field>
@@ -336,12 +505,22 @@ export class SteqEquipmentForm {
               type="textarea"
               rows={4}
               value={this.formData.notes || ''}
+              error={!!this.validationErrors.notes}
+              error-text={this.validationErrors.notes || ''}
+              supporting-text={`${(this.formData.notes || '').length}/1000 characters`}
               onInput={(e: InputEvent) =>
                 this.handleInputChange('notes', (e.target as HTMLTextAreaElement).value)
               }
             >
               <md-icon slot="leading-icon">notes</md-icon>
             </md-outlined-text-field>
+
+            {this.formData.lastService && this.formData.serviceInterval && (
+              <div class="info-display">
+                <md-icon>info</md-icon>
+                <span>Next service due: {this.calculateNextServiceDate() || 'Unable to calculate'}</span>
+              </div>
+            )}
 
             <p class="required-note">* Required fields</p>
           </form>

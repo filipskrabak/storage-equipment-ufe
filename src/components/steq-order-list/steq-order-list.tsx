@@ -145,13 +145,12 @@ export class SteqOrderList {
               </div>
 
               <div class="status-priority-chips">
-                <md-filter-chip
+                <md-assist-chip
                   class={`status-chip status-${order.status}`}
                   label={order.status?.replace('_', ' ') || 'Unknown'}
-                  selected
                 >
                   <md-icon slot="icon">{this.getStatusIcon(order.status)}</md-icon>
-                </md-filter-chip>
+                </md-assist-chip>
               </div>
 
               <div class="action-buttons">
